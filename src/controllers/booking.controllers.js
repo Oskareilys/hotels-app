@@ -2,11 +2,13 @@ const catchError = require('../utils/catchError');
 const Booking = require('../models/Booking');
 const User = require('../models/User');
 const Hotel = require('../models/Hotel');
+const Image = require('../models/Image');
+const City = require('../models/City');
 
 const getAll = catchError(async(req, res) => {
     const {userId} = req.user.id
     const results = await Booking.findAll(
-        {include:[User,Hotel]},
+        {include:[User,{model: Hotel , include:[Image, City]}]},
         {where: {userId: req.user.id}}
     );
     return res.json(results);

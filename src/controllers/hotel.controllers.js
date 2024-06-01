@@ -13,18 +13,19 @@ const getAll = catchError(async(req, res) => {
     const results = await Hotel.findAll({
         include:[City,Image],
         where,
-        raw:true,
-        nest:true,
+        // raw:true,
+        // nest:true,
     
     });
     const hotelsAveragePromise =  results.map(async hotel => {
+        const hotelJSON = hotel.toJSON();
         const reviews= await Review.findAll({where: {hotelId:hotel.id}, raw:true});
         let average = 0;
         reviews.forEach(review =>{
             average += +review.rating;
         })
         return{
-            ...hotel,
+            ...hotelJSON,
             average: +(average/reviews.length).toFixed(2),
             reviews
         }
